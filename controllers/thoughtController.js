@@ -43,9 +43,46 @@ module.exports = {
     },
 
     // delete thought
+    deleteThought(req, res) {
+        Thought.findOneAndRemove({ _id: req.params.id })
+        .then((thoughtData) =>
+            !thoughtData
+                ? res.status(404).json({ message: 'Does not exist' })
+                : Thought.findOneAndUpdate(
+                    { thoughts: req.params.id },
+                    { $pull: { thoughts: req.params.id } },
+                    { message: 'Thought deleted' }
+                )
+        )
+    },
 
     // add reaction
+    addReaction(req, res) {
+        Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { thoughts: { _id: req.params.id } } }
+        )
+            .then((thoughtData) =>
+                !thoughtData
+                    ? res
+                        .status(404)
+                        .json({ message: 'Does not exist' })
+                    : res.json(userData)
+            )
+            .catch((err) => res.status(500).json(err))
+    },
 
     // delete reaction
-
+    deleteReaction(req, res) {
+        Thought.findOneAndRemove({ _id: req.params.id })
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'User does not exists' })
+                    : User.findOneAndUpdate(
+                        { user: req.params.id },
+                        { $pull: { friends: req.params.id } },
+                        { message: 'Friend deleted' }
+                    )
+            )
+    }
 }

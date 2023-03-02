@@ -39,7 +39,7 @@ module.exports = {
             .then((userData) =>
                 !userData
                     ? res
-                        .status(404)
+                        .status(404)  
                         .json({ message: 'User does not exist' })
                     : res.json(userData)
             )
@@ -51,7 +51,7 @@ module.exports = {
         User.findOneAndRemove({ _id: req.params.id })
             .then((user) =>
                 !user
-                    ? res.status(404).json({ message: 'User does not exists' })
+                    ? res.status(404).json({ message: 'User does not exist' })
                     : User.findOneAndUpdate(
                         { user: req.params.id },
                         { $pull: { user: req.params.id } },
