@@ -10,7 +10,7 @@ module.exports = {
 
     // get single thought
     getSingleThought(req, res) {
-        Thought.findOne({ _id: req.params.id })
+        Thought.findOne({ _id: req.body.id })
         .then((thoughtData) =>
             !thoughtData
                 ? res.status(404).json({ message: 'Thought does not exist' })

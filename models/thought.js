@@ -1,4 +1,6 @@
+const { MongoMissingCredentialsError } = require('mongodb')
 const { Schema, model } = require('mongoose')
+// const moment = require ('moment')
 
 const reactionSchema = new Schema(
     {
@@ -41,7 +43,7 @@ const thoughtSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            // getter method to format timestamp
+            // get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh: mm a')
 
         },
         username: {
@@ -67,4 +69,4 @@ thoughtSchema.virtual('reactionCount').get(function () {
 
 const Thought = model('thought', thoughtSchema)
 
-module.export = Thought
+module.exports = Thought

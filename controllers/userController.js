@@ -14,7 +14,7 @@ module.exports = {
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.id })
             .populate({ path: 'thoughts' })
-            .populate({ path: "friends"})
+            .populate({ path: "friends" })
             .then((userData) =>
                 !userData
                     ? res.status(404).json({ message: 'User does not exist' })
@@ -34,12 +34,12 @@ module.exports = {
     updateUser(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.id },
-            { $pull: { user: { _id: req.params.id } } }
+            { $set: req.body },
         )
             .then((userData) =>
                 !userData
                     ? res
-                        .status(404)  
+                        .status(404)
                         .json({ message: 'User does not exist' })
                     : res.json(userData)
             )
@@ -48,24 +48,25 @@ module.exports = {
 
     // delete user by _id
     deleteUser(req, res) {
-        User.findOneAndRemove({ _id: req.params.id })
+        User.findOneAndDelete({ _id: req.params.id })
             .then((user) =>
                 !user
                     ? res.status(404).json({ message: 'User does not exist' })
                     : User.findOneAndUpdate(
-                        { user: req.params.id },
                         { $pull: { user: req.params.id } },
-                        { message: 'User deleted' }
                     )
             )
+            .then(() => res.json({ message: 'User deleted' }))
+            .catch((err) => res.status(500).json(err))
     },
 
     // post to add new friend
     addFriend(req, res) {
         User.findOneAndUpdate(
-            { _id: req.params.id },
-            { $push: { friends: { _id: req.params.id } } }
+            { _id: req.body.id },
+            { $push: { friends: req.body.friendId } }
         )
+            .populate({ path: 'friends'})
             .then((userData) =>
                 !userData
                     ? res
@@ -78,15 +79,15 @@ module.exports = {
 
     // delete friend
     deleteFriend(req, res) {
-        User.findOneAndRemove({ _id: req.params.id })
+        User.findOneAndDelete(
+            { _id: req.params.id },
+            { $pull: { friends: { _id: req.params.friendId } } }
+        )
             .then((user) =>
                 !user
                     ? res.status(404).json({ message: 'User does not exists' })
-                    : User.findOneAndUpdate(
-                        { user: req.params.id },
-                        { $pull: { friends: req.params.id } },
-                        { message: 'Friend deleted' }
-                    )
+                    : { message: 'Friend deleted' }
             )
+
     }
 }
