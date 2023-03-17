@@ -26,7 +26,7 @@ module.exports = {
     // post new user (username and email)
     createUser(req, res) {
         User.create(req.body)
-            .then((userData) => res.json(userData))
+            .then((userData) => res.json({message: 'User created'}))
             .catch((err) => res.status(500).json(err));
     },
 
@@ -63,31 +63,32 @@ module.exports = {
     // post to add new friend
     addFriend(req, res) {
         User.findOneAndUpdate(
-            { _id: req.body.id },
-            { $push: { friends: req.body.friendId } }
+            { _id: req.params.id },
+            { $push: { friends: req.params.friendId } }
         )
-            .populate({ path: 'friends'})
+            .populate({ path: 'friends' })
             .then((userData) =>
                 !userData
                     ? res
                         .status(404)
                         .json({ message: 'User does not exist' })
-                    : res.json(userData)
+                    : res.json({message: 'Friend added'})
             )
             .catch((err) => res.status(500).json(err))
     },
 
     // delete friend
     deleteFriend(req, res) {
-        User.findOneAndDelete(
-            { _id: req.params.id },
-            { $pull: { friends: { _id: req.params.friendId } } }
-        )
+        User.findOneAndDelete({ _id: req.params.id })
             .then((user) =>
                 !user
                     ? res.status(404).json({ message: 'User does not exists' })
-                    : { message: 'Friend deleted' }
+                    : User.findOneAndUpdate(
+                        { $pull: { friends: { _id: req.params.friendId } } }
+                    )
             )
+            .then(() => res.json({ message: 'Friend deleted' }))
+            .catch((err) => res.status(500).json(err))
 
     }
 }

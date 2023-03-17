@@ -10,7 +10,7 @@ module.exports = {
 
     // get single thought
     getSingleThought(req, res) {
-        Thought.findOne({ _id: req.body.id })
+        Thought.findOne({ _id: req.params.thoughtId })
         .then((thoughtData) =>
             !thoughtData
                 ? res.status(404).json({ message: 'Thought does not exist' })
@@ -29,8 +29,8 @@ module.exports = {
     // update thought
     updateThought(req, res) {
         Thought.findOneAndUpdate(
-            { _id: req.params.id },
-            { $pull: { thought: { _id: req.params.id } } }
+            { _id: req.params.thoughtId },
+            { $pull: { thought: { _id: req.params.thoughtId } } }
         )
             .then((thoughtData) =>
                 !thoughtData
@@ -44,13 +44,13 @@ module.exports = {
 
     // delete thought
     deleteThought(req, res) {
-        Thought.findOneAndRemove({ _id: req.params.id })
+        Thought.findOneAndRemove({ _id: req.params.thoughtId })
         .then((thoughtData) =>
             !thoughtData
                 ? res.status(404).json({ message: 'Does not exist' })
                 : Thought.findOneAndUpdate(
-                    { thoughts: req.params.id },
-                    { $pull: { thoughts: req.params.id } },
+                    { thoughts: req.params.thoughtId },
+                    { $pull: { thoughts: req.params.thoughtId } },
                     { message: 'Thought deleted' }
                 )
         )
