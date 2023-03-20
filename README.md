@@ -18,4 +18,4 @@ THEN I am able to successfully create and delete reactions to thoughts and add a
 
 Video Walkthrough
 User Routes: https://drive.google.com/file/d/1BsPc-swn7Ybyq5sMQhJ7Nq1xZCzWk6Tc/view
-Thought Routes: 
+Thought Routes: https://drive.google.com/file/d/162OUQGJzk3q69NKeE0USyLA7fUQpPXZG/view

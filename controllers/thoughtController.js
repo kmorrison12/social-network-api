@@ -62,7 +62,7 @@ module.exports = {
     addReaction(req, res) {
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
-            { $push: { reactions: { _id: req.body.id } } }
+            { $push: { reactions: req.body } }
         )
             .populate({ path: 'reactions' })
             .then((reactionData) =>
