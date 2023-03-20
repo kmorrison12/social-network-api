@@ -20,3 +20,5 @@ Video Walkthrough\
 User Routes: https://drive.google.com/file/d/1BsPc-swn7Ybyq5sMQhJ7Nq1xZCzWk6Tc/view
 
 Thought Routes: https://drive.google.com/file/d/162OUQGJzk3q69NKeE0USyLA7fUQpPXZG/view
+
+Assistance provided by AskBCS for addFriend and getThoughts functions in controllers.
