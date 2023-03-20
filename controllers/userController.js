@@ -23,10 +23,10 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
 
-    // post new user (username and email)
+    // post new user
     createUser(req, res) {
         User.create(req.body)
-            .then((userData) => res.json({message: 'User created'}))
+            .then((userData) => res.json(userData))
             .catch((err) => res.status(500).json(err));
     },
 
@@ -72,22 +72,22 @@ module.exports = {
                     ? res
                         .status(404)
                         .json({ message: 'User does not exist' })
-                    : res.json({message: 'Friend added'})
+                    : res.json({ message: 'Friend added' })
             )
             .catch((err) => res.status(500).json(err))
     },
 
     // delete friend
     deleteFriend(req, res) {
-        User.findOneAndDelete({ _id: req.params.id })
-            .then((user) =>
-                !user
+        User.findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { friends: { _id: req.params.friendId } } }
+        )
+            .then((friendData) =>
+                !friendData
                     ? res.status(404).json({ message: 'User does not exists' })
-                    : User.findOneAndUpdate(
-                        { $pull: { friends: { _id: req.params.friendId } } }
-                    )
+                    : res.json({ message: 'Friend deleted' })
             )
-            .then(() => res.json({ message: 'Friend deleted' }))
             .catch((err) => res.status(500).json(err))
 
     }
